@@ -10,12 +10,16 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import com.asi.newsapp.R
+import com.asi.newsapp.databinding.FragmentNewsArticlePageBinding
 
 private const val ARG_URI = "news_article_page_url"
 
 class NewsArticlePageFragment : Fragment() {
+
+    private var _binding: FragmentNewsArticlePageBinding? = null
+    private val binding: FragmentNewsArticlePageBinding get() = _binding!!
+
     private lateinit var uri: Uri
-    private lateinit var webView: WebView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,19 +31,18 @@ class NewsArticlePageFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_news_article_page, container, false)
-        webView = view.findViewById(R.id.web_view)
-        webView.settings.javaScriptEnabled = true
-        webView.webViewClient = WebViewClient()
-        webView.loadUrl(uri.toString())
-        return view
+    ): View {
+        _binding = FragmentNewsArticlePageBinding.inflate(inflater, container, false)
+        binding.webView.settings.javaScriptEnabled = true
+        binding.webView.webViewClient = WebViewClient()
+        binding.webView.loadUrl(uri.toString())
+        return binding.root
     }
 
 
     fun goBack():Boolean{
-        if (webView.canGoBack()) {
-            webView.goBack()
+        if (binding.webView.canGoBack()) {
+            binding.webView.goBack()
             return true
         }
         return false

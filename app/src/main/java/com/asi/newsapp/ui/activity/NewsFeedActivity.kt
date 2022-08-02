@@ -4,13 +4,16 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.asi.newsapp.R
+import com.asi.newsapp.databinding.ActivityNewsFeedBinding
 import com.asi.newsapp.ui.fragment.NewsArticlePageFragment
 import com.asi.newsapp.ui.fragment.NewsFeedFragment
 
 class NewsFeedActivity : AppCompatActivity() , NewsFeedFragment.Callbacks{
+    private lateinit var binding: ActivityNewsFeedBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_news_feed)
+        binding = ActivityNewsFeedBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val isFragmentContainerEmpty = savedInstanceState == null
         if(isFragmentContainerEmpty){
             supportFragmentManager

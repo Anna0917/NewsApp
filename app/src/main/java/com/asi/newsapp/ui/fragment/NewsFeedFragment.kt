@@ -14,6 +14,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asi.newsapp.R
+import com.asi.newsapp.databinding.ActivityNewsFeedBinding
+import com.asi.newsapp.databinding.FragmentNewsFeedBinding
 import com.asi.newsapp.model.NewsArticle
 import com.asi.newsapp.ui.viewmodel.NewsFeedViewModel
 import com.asi.newsapp.util.UtilDate
@@ -25,10 +27,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class NewsFeedFragment : Fragment() {
 
     private var callbacks: Callbacks? = null
-
     private val newsFeedViewModel by viewModel<NewsFeedViewModel>()
 
-    private lateinit var newsFeedRecyclerView: RecyclerView
+    private var _binding: FragmentNewsFeedBinding? = null
+    private val binding: FragmentNewsFeedBinding get() = _binding!!
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -40,11 +42,10 @@ class NewsFeedFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_news_feed, container, false)
-        newsFeedRecyclerView = view.findViewById(R.id.news_recycler_view)
-        newsFeedRecyclerView.layoutManager = LinearLayoutManager(context)
-        return view
+    ): View {
+        _binding = FragmentNewsFeedBinding.inflate(inflater, container, false)
+        binding.newsRecyclerView.layoutManager = LinearLayoutManager(context)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,9 +53,14 @@ class NewsFeedFragment : Fragment() {
         newsFeedViewModel.newsLiveData.observe(
             viewLifecycleOwner,
             Observer {
-                newsFeedRecyclerView.adapter = NewsAdapter(it)
+                binding.newsRecyclerView.adapter = NewsAdapter(it)
             }
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onDetach() {
