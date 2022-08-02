@@ -39,6 +39,11 @@ class NewsArticlePageFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
     fun goBack():Boolean{
         if (binding.webView.canGoBack()) {
