@@ -3,4 +3,6 @@
     <string name="news_title_label">NEWS TITLE</string>
     <string name="news_author_label">Author</string>
     <string name="news_date_label">Date</string>
+    <string name="search">Search</string>
+    <string name="cleat_search">Clear Search</string>
 </resources>

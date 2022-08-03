@@ -3,10 +3,9 @@ package com.asi.newsapp.ui.fragment
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
@@ -37,6 +36,10 @@ class NewsFeedFragment : Fragment() {
         callbacks = context as Callbacks?
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,6 +69,35 @@ class NewsFeedFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         callbacks = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_news_feed, menu)
+        val searchItem: MenuItem = menu.findItem(R.id.menu_item_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.apply{
+            setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    newsFeedViewModel.saveLastSearchQuery(query)
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    return false
+                }
+            })
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.menu_item_clear -> {
+                newsFeedViewModel.saveLastSearchQuery()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     companion object {

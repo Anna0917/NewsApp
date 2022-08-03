@@ -11,6 +11,7 @@ object AppInjector {
             modules(listOf(
                 newsServiceModule,
                 repositoryModule,
+                storageModule,
                 viewModelModule
             ))
         }
