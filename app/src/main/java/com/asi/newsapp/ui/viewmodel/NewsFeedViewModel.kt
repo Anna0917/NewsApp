@@ -9,7 +9,6 @@ import com.asi.newsapp.repository.NewsRepository
 import com.asi.newsapp.storage.LocalStorage
 
 class NewsFeedViewModel(private val newsRepository: NewsRepository, private val localStorage: LocalStorage) : ViewModel() {
-
     val newsLiveData: LiveData<List<NewsArticle>>
 
     private val mutableSearchTerm = MutableLiveData<String>()

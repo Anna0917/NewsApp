@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asi.newsapp.R
 import com.asi.newsapp.databinding.ActivityNewsFeedBinding
 import com.asi.newsapp.databinding.FragmentNewsFeedBinding
+import com.asi.newsapp.databinding.ItemNewsArticleBinding
 import com.asi.newsapp.model.NewsArticle
 import com.asi.newsapp.ui.viewmodel.NewsFeedViewModel
 import com.asi.newsapp.util.UtilDate
@@ -107,9 +108,11 @@ class NewsFeedFragment : Fragment() {
 
     private inner class NewsAdapter(private val newsArticles: List<NewsArticle>) :
         RecyclerView.Adapter<NewsAdapter.NewsArticleViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsArticleViewHolder =
-            NewsArticleViewHolder(layoutInflater.inflate(R.layout.item_news_article, parent, false))
 
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsArticleViewHolder {
+            val b = ItemNewsArticleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return NewsArticleViewHolder(b)
+        }
 
         override fun getItemCount(): Int = newsArticles.size
 
@@ -117,13 +120,9 @@ class NewsFeedFragment : Fragment() {
             holder.bind(newsArticles[position])
 
 
-        inner class NewsArticleViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-            private lateinit var newsArticle: NewsArticle
 
-            val titleTextView: TextView = itemView.findViewById(R.id.news_title)
-            val authorTextView: TextView = itemView.findViewById(R.id.news_author)
-            val dateTextView: TextView = itemView.findViewById(R.id.news_date)
-            val newsImageView: ImageView = itemView.findViewById(R.id.news_image)
+        inner class NewsArticleViewHolder(val holderBinding: ItemNewsArticleBinding) : RecyclerView.ViewHolder(holderBinding.root), View.OnClickListener {
+            private lateinit var newsArticle: NewsArticle
 
             init {
                 itemView.setOnClickListener(this)
@@ -132,11 +131,11 @@ class NewsFeedFragment : Fragment() {
             fun bind(newsArticle: NewsArticle) {
                 this.newsArticle = newsArticle
 
-                titleTextView.text = newsArticle.title
-                authorTextView.text = newsArticle.author
-                dateTextView.text = UtilDate.getSimpleFormatDate(newsArticle.publishedAt)
+                holderBinding.newsTitle.text = newsArticle.title
+                holderBinding.newsAuthor.text = newsArticle.author
+                holderBinding.newsDate.text = UtilDate.getSimpleFormatDate(newsArticle.publishedAt)
 
-                Glide.with(newsImageView.context)
+                Glide.with(holderBinding.newsImage.context)
                     .load(newsArticle.urlToImage)
                     .apply(
                         RequestOptions()
@@ -144,7 +143,7 @@ class NewsFeedFragment : Fragment() {
                         .error(R.drawable.images)
                         .diskCacheStrategy(DiskCacheStrategy.ALL))
                     .centerCrop()
-                    .into(newsImageView)
+                    .into(holderBinding.newsImage)
 
             }
 
